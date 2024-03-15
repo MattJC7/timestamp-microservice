@@ -18,6 +18,10 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+/* let dateInput = "2015-05-20"
+let dateObj = new Date(dateInput)
+
+console.log(isNaN(dateObj)) */
 
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
@@ -30,3 +34,39 @@ app.get("/api/hello", function (req, res) {
 var listener = app.listen(process.env.PORT || 3000, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+app.get("/api/:date", (req, res) => {
+  const dateInput = req.params.date
+  const confirmDate = /[a-z]|-/gi.test(dateInput)
+
+  if(confirmDate){
+    const dateObj = new Date (dateInput)
+    if (!isNaN(dateObj)){
+        res.json(
+          {
+            "unix": dateObj.getTime(),
+            "utc": dateObj.toUTCString()
+          }
+        )
+    }else {
+      res.json({
+        "error": "Invalid Date"
+      })
+    }
+  }else {
+    const unix = parseInt(dateInput)
+      res.json({
+        "unix": unix,
+        "utc": new Date (unix).toUTCString()
+      })
+  }
+})
+
+app.get("/api/", (req, res) => {
+  const date = new Date()
+  const unixTimestamp = Math.floor(date.getTime())
+  res.json({
+    "unix": unixTimestamp,
+    "utc": date.toUTCString()
+  })
+})
