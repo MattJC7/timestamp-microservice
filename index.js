@@ -11,24 +11,21 @@ var cors = require('cors');
 app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
+//app.use(express.static('public'));
+
+const path = require('path')
+app.use(express.static(path.join(__dirname, 'public')))
+
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-/* let dateInput = "2015-05-20"
-let dateObj = new Date(dateInput)
-
-console.log(isNaN(dateObj)) */
-
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
-
-
 
 // Listen on port set in environment variable or default to 3000
 var listener = app.listen(process.env.PORT || 3000, function () {
